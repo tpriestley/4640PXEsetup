@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -u
+set -uxe
 
 PXE_VM="PXE4640"
 TODO_VM="TODO4640"
@@ -9,7 +9,7 @@ NET_CIDR="192.168.150.0/24"
 PXE_SHH_PORT=""
 VM_SSH_PORT=""
 SSH_KEY="~/.ssh/acit_admin_id_rsa"
-
+PORT_FORWARDING="PXESSH:tcp:[]:9222:[192.168.150.10]:22"
 #Creates a bash function which runs VBoxManage.exe when using vbmg
 vbmg() {
     VBoxManage.exe "$@";
@@ -55,3 +55,8 @@ done
 #Finds the path to the vm folder
 SED_PROGRAM="/^Config file:/ { s|^Config file: \+\(.\+\)\\\\.\+\.vbox|\1|; s|\\\\|/|gp }"
 VM_FOLDER=$(vbmg showvminfo TODO4640 | sed -ne "$SED_PROGRAM" | tr -d "\r\n")
+
+#Setup the NAT-network
+vbmg natnetwork add --netname ${NET_NAME} --enable --dhcp off \
+    --network ${NET_CIDR} \
+    --port-forward-4  ${PORT_FORWARDING}
