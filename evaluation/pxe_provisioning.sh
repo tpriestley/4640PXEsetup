@@ -11,6 +11,9 @@ SSH_KEY="~/.ssh/acit_admin_id_rsa"
 PXE_PORT_FORWARDING="PXESSH:tcp:[]:9222:[192.168.150.10]:22"
 TODOSSH_PORT_FORWARDING="TODOSSH:tcp:[]:8022:[192.168.150.200]:22"
 VMHTTP_PORT_FORWARDING="VMHTTP:tcp:[]:8080:[192.168.150.200]:80"
+SETUP_FOLDER= "/home/admin/evaluation/setup"
+WWW_FOLDER="~/www/"
+
 #Creates a bash function which runs VBoxManage.exe when using vbmg
 vbmg() {
     VBoxManage.exe "$@";
@@ -75,9 +78,10 @@ else
     #Add a 10GB hard disk to TODO4640
     vbmg storagectl ${TODO_VM} --name ${TODO_VDI} --add sata --controller IntelAHCI
     #problem with spaces in folder names on windows, also permission denied when hard coded
-    vbmg createmedium disk --filename ${VM_FOLDER}/${TODO_VDI}.vdi --size 10240
+    vbmg createmedium disk --filename "${VM_FOLDER}/${TODO_VDI}.vdi" --size 10240
 fi
-    vbmg startvm ${TODO_VM}
+
+vbmg startvm ${TODO_VM}
 
 #Waiting for virtual machine to be up and running
 set +e
@@ -93,7 +97,8 @@ while /bin/true; do
     fi
 done
 set -e
+vbmg controlvm <vm> restart
 
-
+cp ${SETUP_FOLDER}/* ${WWW_FOLDER}
 
 #find_running_machine "PXE4640" && vbmg controlvm PXE4640 acpipowerbutton
