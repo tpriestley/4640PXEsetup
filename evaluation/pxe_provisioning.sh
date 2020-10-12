@@ -11,7 +11,7 @@ SSH_KEY="~/.ssh/acit_admin_id_rsa"
 PXE_PORT_FORWARDING="PXESSH:tcp:[]:9222:[192.168.150.10]:22"
 TODOSSH_PORT_FORWARDING="TODOSSH:tcp:[]:8022:[192.168.150.200]:22"
 VMHTTP_PORT_FORWARDING="VMHTTP:tcp:[]:8080:[192.168.150.200]:80"
-SETUP_FOLDER= "/home/$USER/evaluation/setup"
+SETUP_FOLDER= "/home/$USER/4640PXEsetup/evaluation/todo_setup"
 WWW_FOLDER="~/www/"
 
 #Creates a bash function which runs VBoxManage.exe when using vbmg
@@ -58,6 +58,9 @@ while /bin/true; do
     fi
 done
 set -e
+
+cp ${SETUP_FOLDER}/ks.cfg ${WWW_FOLDER}/ks.cfg
+
 #Check if TODO4640 exists, remove the TODO4640 and create a new one
 if find_machine "TODO4640"
 then
@@ -98,7 +101,5 @@ while /bin/true; do
 done
 set -e
 vbmg controlvm <vm> restart
-
-cp ${SETUP_FOLDER}/* ${WWW_FOLDER}
 
 #find_running_machine "PXE4640" && vbmg controlvm PXE4640 acpipowerbutton
