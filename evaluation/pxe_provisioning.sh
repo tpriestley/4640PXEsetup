@@ -59,7 +59,9 @@ while /bin/true; do
 done
 set -e
 
-cp ${SETUP_FOLDER}/ks.cfg ${WWW_FOLDER}/ks.cfg
+scp -i ~/.ssh/acit_admin_id_rsa -P 9222 /home/$USER/4640PXEsetup/evaluation/todo_setup/ks.cfg admin@localhost:/www/
+scp -i ~/.ssh/acit_admin_id_rsa -P 9222 /home/$USER/4640PXEsetup/evaluation/todo_setup/setup/install_script.sh admin@localhost:/www/
+scp -i ~/.ssh/acit_admin_id_rsa -P 9222 -r /home/$USER/4640PXEsetup/evaluation/todo_setup/setup/ admin@localhost:/home/admin/
 
 #Check if TODO4640 exists, remove the TODO4640 and create a new one
 if find_machine "TODO4640"
