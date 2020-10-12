@@ -42,6 +42,7 @@ vbmg natnetwork add --netname ${NET_NAME} --enable --dhcp off \
 vbmg startvm ${PXE_VM}
 
 #Waiting for virtual machine to be up and running
+set +e
 while /bin/true; do
     ssh -i ${SSH_KEY} -p 9222 \
         -q -o ConnectTimeout=2 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
@@ -53,7 +54,7 @@ while /bin/true; do
             break
     fi
 done
-
+set -e
 #Check if TODO4640 exists, remove the TODO4640 and create a new one
 if find_machine "TODO4640"
 then
@@ -79,6 +80,7 @@ fi
     vbmg startvm ${TODO_VM}
 
 #Waiting for virtual machine to be up and running
+set +e
 while /bin/true; do
     ssh -i ${SSH_KEY} -p 8022 \
         -q -o ConnectTimeout=2 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
@@ -90,6 +92,8 @@ while /bin/true; do
             break
     fi
 done
+set -e
+
 
 
 #find_running_machine "PXE4640" && vbmg controlvm PXE4640 acpipowerbutton
