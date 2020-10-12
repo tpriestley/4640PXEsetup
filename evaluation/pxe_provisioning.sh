@@ -20,7 +20,7 @@ vbmg() {
 SED_PROGRAM="/^Config file:/ { s|^Config file: \+\(.\+\)\\\\.\+\.vbox|\1|; s|\\\\|/|gp }"
 
 
-#Checks if there are any existence virtual machines in Vbox
+#Checks if there are any existing virtual machines in Vbox
 find_machine() {
     local status=$(vbmg list vms | grep "$1" | cut -d'"' -f2)
     if [ -z "$status" ]; then return 1; else return 0; fi
