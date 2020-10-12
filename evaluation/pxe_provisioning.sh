@@ -12,14 +12,14 @@ PXE_PORT_FORWARDING="PXESSH:tcp:[]:9222:[192.168.150.10]:22"
 TODOSSH_PORT_FORWARDING="TODOSSH:tcp:[]:8022:[192.168.150.200]:22"
 VMHTTP_PORT_FORWARDING="VMHTTP:tcp:[]:8080:[192.168.150.200]:80"
 SETUP_FOLDER=/home/$USER/evaluation/evaluation/todo_setup
-WWW_FOLDER=~/www
+WWW_FOLDER=/www
 
 #Creates a bash function which runs VBoxManage.exe when using vbmg
 vbmg() {
     VBoxManage.exe "$@";
 }
 
-#Init sed program
+#Initialize SED search
 SED_PROGRAM="/^Config file:/ { s|^Config file: \+\(.\+\)\\\\.\+\.vbox|\1|; s|\\\\|/|gp }"
 
 
@@ -102,6 +102,8 @@ while /bin/true; do
     fi
 done
 set -e
-vbmg controlvm ${TODO_VM} restart
 
+#Restart TODO VM
+vbmg controlvm ${TODO_VM} restart
+#Shutdown PXE VM
 find_running_machine "PXE4640" && vbmg controlvm PXE4640 acpipowerbutton
