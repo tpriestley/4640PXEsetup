@@ -11,8 +11,8 @@ SSH_KEY="~/.ssh/acit_admin_id_rsa"
 PXE_PORT_FORWARDING="PXESSH:tcp:[]:9222:[192.168.150.10]:22"
 TODOSSH_PORT_FORWARDING="TODOSSH:tcp:[]:8022:[192.168.150.200]:22"
 VMHTTP_PORT_FORWARDING="VMHTTP:tcp:[]:8080:[192.168.150.200]:80"
-SETUP_FOLDER= "/home/$USER/4640PXEsetup/evaluation/todo_setup"
-WWW_FOLDER="~/www/"
+SETUP_FOLDER=/home/$USER/4640PXEsetup/evaluation/todo_setup
+WWW_FOLDER=~/www
 
 #Creates a bash function which runs VBoxManage.exe when using vbmg
 vbmg() {
