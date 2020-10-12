@@ -11,7 +11,7 @@ SSH_KEY="~/.ssh/acit_admin_id_rsa"
 PXE_PORT_FORWARDING="PXESSH:tcp:[]:9222:[192.168.150.10]:22"
 TODOSSH_PORT_FORWARDING="TODOSSH:tcp:[]:8022:[192.168.150.200]:22"
 VMHTTP_PORT_FORWARDING="VMHTTP:tcp:[]:8080:[192.168.150.200]:80"
-SETUP_FOLDER= "/home/admin/evaluation/setup"
+SETUP_FOLDER= "/home/$USER/evaluation/setup"
 WWW_FOLDER="~/www/"
 
 #Creates a bash function which runs VBoxManage.exe when using vbmg
@@ -71,7 +71,7 @@ else
     #Modify TODO4640
     vbmg modifyvm ${TODO_VM} \
     --memory 2048 \
-    --nic1 natnetwork --nat-network1 NET4640 --cableconnected1 on \
+    --nic1 natnetwork --nat-network1 NET_4640 --cableconnected1 on \
     --boot1 disk --boot2 net --boot3 none --boot4 none \
     --graphicscontroller vmsvga
     VM_FOLDER=$(vbmg showvminfo TODO4640 | sed -ne "$SED_PROGRAM" | tr -d "\r\n")
@@ -79,8 +79,8 @@ else
     vbmg storagectl ${TODO_VM} --name ${TODO_VDI} --add sata --controller IntelAHCI
     #problem with spaces in folder names on windows, also permission denied when hard coded
     vbmg createmedium disk --filename "${VM_FOLDER}/${TODO_VDI}.vdi" --size 10240
+    vbmg storageattach ${TODO_VM} --storagectl ${TODO_VDI} --port 0 --device 0 --type hdd --medium "${VM_FOLDER}/${TODO_VDI}.vdi"
 fi
-
 vbmg startvm ${TODO_VM}
 
 #Waiting for virtual machine to be up and running
