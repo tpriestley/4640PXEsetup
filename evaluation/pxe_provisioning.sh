@@ -11,7 +11,7 @@ SSH_KEY="~/.ssh/acit_admin_id_rsa"
 PXE_PORT_FORWARDING="PXESSH:tcp:[]:9222:[192.168.150.10]:22"
 TODOSSH_PORT_FORWARDING="TODOSSH:tcp:[]:8022:[192.168.150.200]:22"
 VMHTTP_PORT_FORWARDING="VMHTTP:tcp:[]:8080:[192.168.150.200]:80"
-SETUP_FOLDER=/home/$USER/4640PXEsetup/evaluation/todo_setup
+SETUP_FOLDER=/home/$USER/evaluation/evaluation/todo_setup
 WWW_FOLDER=~/www
 
 #Creates a bash function which runs VBoxManage.exe when using vbmg
@@ -59,9 +59,9 @@ while /bin/true; do
 done
 set -e
 
-scp -i ~/.ssh/acit_admin_id_rsa -P 9222 /home/$USER/4640PXEsetup/evaluation/todo_setup/ks.cfg admin@localhost:/www/
-scp -i ~/.ssh/acit_admin_id_rsa -P 9222 /home/$USER/4640PXEsetup/evaluation/todo_setup/setup/install_script.sh admin@localhost:/www/
-scp -i ~/.ssh/acit_admin_id_rsa -P 9222 -r /home/$USER/4640PXEsetup/evaluation/todo_setup/setup/ admin@localhost:/home/admin/
+scp -i ~/.ssh/acit_admin_id_rsa -P 9222 /home/$USER/evaluation/evaluation/todo_setup/ks.cfg admin@localhost:/www/
+scp -i ~/.ssh/acit_admin_id_rsa -P 9222 /home/$USER/evaluation/evaluation/todo_setup/setup/install_script.sh admin@localhost:/www/
+scp -i ~/.ssh/acit_admin_id_rsa -P 9222 -r /home/$USER/evaluation/evaluation/todo_setup/setup/ admin@localhost:/home/admin/
 
 #Check if TODO4640 exists, remove the TODO4640 and create a new one
 if find_machine "TODO4640"
