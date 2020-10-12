@@ -102,6 +102,6 @@ while /bin/true; do
     fi
 done
 set -e
-vbmg controlvm <vm> restart
+vbmg controlvm ${TODO_VM} restart
 
 #find_running_machine "PXE4640" && vbmg controlvm PXE4640 acpipowerbutton
