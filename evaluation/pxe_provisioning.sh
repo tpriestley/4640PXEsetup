@@ -59,9 +59,9 @@ while /bin/true; do
 done
 set -e
 
-scp -i ~/.ssh/acit_admin_id_rsa -P 9222 /home/$USER/evaluation/evaluation/todo_setup/ks.cfg admin@localhost:/www/
-scp -i ~/.ssh/acit_admin_id_rsa -P 9222 /home/$USER/evaluation/evaluation/todo_setup/setup/install_script.sh admin@localhost:/www/
-scp -i ~/.ssh/acit_admin_id_rsa -P 9222 -r /home/$USER/evaluation/evaluation/todo_setup/setup/ admin@localhost:/home/admin/
+scp -i ~/.ssh/acit_admin_id_rsa -P 9222 ${SETUP_FOLDER}/ks.cfg admin@localhost:/www/
+scp -i ~/.ssh/acit_admin_id_rsa -P 9222 ${SETUP_FOLDER}/setup/install_script.sh admin@localhost:/www/
+scp -i ~/.ssh/acit_admin_id_rsa -P 9222 -r ${SETUP_FOLDER}/setup/ admin@localhost:/home/admin/
 
 #Check if TODO4640 exists, remove the TODO4640 and create a new one
 if find_machine "TODO4640"
@@ -104,4 +104,4 @@ done
 set -e
 vbmg controlvm ${TODO_VM} restart
 
-#find_running_machine "PXE4640" && vbmg controlvm PXE4640 acpipowerbutton
+find_running_machine "PXE4640" && vbmg controlvm PXE4640 acpipowerbutton
