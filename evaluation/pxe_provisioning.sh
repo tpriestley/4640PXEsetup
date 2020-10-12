@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -uxe
+set -euxo pipefail
 
 PXE_VM="PXE4640"
 TODO_VM="TODO4640"
@@ -11,11 +11,13 @@ SSH_KEY="~/.ssh/acit_admin_id_rsa"
 PXE_PORT_FORWARDING="PXESSH:tcp:[]:9222:[192.168.150.10]:22"
 TODOSSH_PORT_FORWARDING="TODOSSH:tcp:[]:8022:[192.168.150.200]:22"
 VMHTTP_PORT_FORWARDING="VMHTTP:tcp:[]:8080:[192.168.150.200]:80"
-
 #Creates a bash function which runs VBoxManage.exe when using vbmg
 vbmg() {
     VBoxManage.exe "$@";
 }
+
+#Init sed program
+SED_PROGRAM="/^Config file:/ { s|^Config file: \+\(.\+\)\\\\.\+\.vbox|\1|; s|\\\\|/|gp }"
 
 
 #Checks if there are any existence virtual machines in Vbox
@@ -32,8 +34,8 @@ find_running_machine() {
 #Setup the NAT-network
 vbmg natnetwork add --netname ${NET_NAME} --enable --dhcp off \
     --network ${NET_CIDR} \
-    --port-forward-4  ${PXE_PORT_FORWARDING}
-    --port-forward-4  ${TODOSSH_PORT_FORWARDING}
+    --port-forward-4  ${PXE_PORT_FORWARDING} \
+    --port-forward-4  ${TODOSSH_PORT_FORWARDING} \
     --port-forward-4  ${VMHTTP_PORT_FORWARDING}
 
 #Start PXE vm
@@ -68,10 +70,13 @@ else
     --nic1 natnetwork --nat-network1 NET4640 --cableconnected1 on \
     --boot1 disk --boot2 net --boot3 none --boot4 none \
     --graphicscontroller vmsvga
+    VM_FOLDER=$(vbmg showvminfo TODO4640 | sed -ne "$SED_PROGRAM" | tr -d "\r\n")
     #Add a 10GB hard disk to TODO4640
-    vbmg storagectl ${TODO_VM} --name $TODO_VDI --add sata --controller IntelAHCI
-    vbmg createmedium disk --filename /full/path/to/the/disk_file.vdi --size 10240
+    vbmg storagectl ${TODO_VM} --name ${TODO_VDI} --add sata --controller IntelAHCI
+    #problem with spaces in folder names on windows, also permission denied when hard coded
+    vbmg createmedium disk --filename ${VM_FOLDER}/${TODO_VDI}.vdi --size 10240
 fi
+    vbmg startvm ${TODO_VM}
 
 #Waiting for virtual machine to be up and running
 while /bin/true; do
@@ -87,9 +92,4 @@ while /bin/true; do
 done
 
 
-
-#Finds the path to the vm folder
-SED_PROGRAM="/^Config file:/ { s|^Config file: \+\(.\+\)\\\\.\+\.vbox|\1|; s|\\\\|/|gp }"
-VM_FOLDER=$(vbmg showvminfo TODO4640 | sed -ne "$SED_PROGRAM" | tr -d "\r\n")
-
-find_running_machine "PXE4640" && vbmg controlvm PXE4640 acpipowerbutton
+#find_running_machine "PXE4640" && vbmg controlvm PXE4640 acpipowerbutton
